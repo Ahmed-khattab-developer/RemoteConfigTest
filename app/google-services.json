@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "176931178355",
+    "project_id": "remoteconfigtest-81c3e",
+    "storage_bucket": "remoteconfigtest-81c3e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176931178355:android:72a1b2fd38ee78cfaaa706",
+        "android_client_info": {
+          "package_name": "com.tanzeem.remoteconfigtest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_qSLyO_JlbcXFnyIo5tDai0lBR43mDpI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
