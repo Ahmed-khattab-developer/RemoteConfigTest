@@ -18,15 +18,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.remoteConfigRepo.initConfigs("enable_button")
-        viewModel.remoteConfigRepo.valueLiveData.observe(this) { updateConfigs(it) }
+        viewModel.enableBuyerCreateContractLiveData.observe(this) { updateConfigs(it) }
     }
 
-    private fun updateConfigs(remoteConfigs: RemoteConfigs) {
+    private fun updateConfigs(boolean: Boolean) {
 
-        findViewById<Button>(R.id.hide_btn).isVisible = remoteConfigs.boolean
+        findViewById<Button>(R.id.hide_btn).isVisible = boolean
         Toast.makeText(
-            this, "button visibility is ${remoteConfigs.boolean}", Toast.LENGTH_SHORT
+            this, "button visibility is $boolean", Toast.LENGTH_SHORT
         ).show()
 
     }

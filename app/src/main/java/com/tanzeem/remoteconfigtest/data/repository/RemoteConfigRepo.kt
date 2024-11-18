@@ -1,10 +1,14 @@
 package com.tanzeem.remoteconfigtest.data.repository
 
-import com.tanzeem.remoteconfigtest.data.model.RemoteConfigs
-import com.tanzeem.remoteconfigtest.util.SingleLiveEvent
 
 interface RemoteConfigRepo {
-    val valueLiveData: SingleLiveEvent<RemoteConfigs>
-    fun initConfigs(key: String = "enable_button")
-    fun getConfigs(key:String): RemoteConfigs
+    fun initConfigs()
+    fun getString(key: String): String
+    fun getInt(key: String): Int
+    fun getDouble(key: String): Double
+    fun getFloat(key: String): Float
+    fun getLong(key: String): Long
+    fun getBoolean(key: String): Boolean
+    fun getJson(key: String): String
+    fun release()
 }
