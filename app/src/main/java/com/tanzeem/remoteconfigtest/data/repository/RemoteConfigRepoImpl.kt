@@ -11,15 +11,10 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.tanzeem.remoteconfigtest.R
 
 class RemoteConfigRepoImpl(
+    private val onCallBack: (ss: Boolean) -> Unit = {},
     private val firebaseRemoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig,
     private val remoteConfigDefaultsResId: Int = R.xml.remote_config_defaults,
 ) : RemoteConfigRepo {
-
-    private var mOnEventListener: OnEventListener? = null
-
-    fun setOnEventListener(listener: OnEventListener?) {
-        mOnEventListener = listener
-    }
 
     override fun initConfigs() {
         if (BuildConfig.DEBUG) {
@@ -39,8 +34,8 @@ class RemoteConfigRepoImpl(
     private fun fetchRemoteConfig(remoteConfig: FirebaseRemoteConfig) {
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener {
+                onCallBack(firebaseRemoteConfig.getBoolean("enable_button"))
 
-                    mOnEventListener?.onEvent(firebaseRemoteConfig.getBoolean("enable_button"))
 
                 Log.e(
                     "asasassasasasasasasassasa",
@@ -54,11 +49,16 @@ class RemoteConfigRepoImpl(
             override fun onUpdate(configUpdate: ConfigUpdate) {
                 val updateKeysSize = configUpdate.updatedKeys.size
                 remoteConfig.activate().addOnCompleteListener {
-                    mOnEventListener?.onEvent(firebaseRemoteConfig.getBoolean("enable_button"))
-                    Log.e(
-                        "asasassasasasasasasassasa",
-                        "syncConfigurationsUpdates" + firebaseRemoteConfig.getBoolean("enable_button")
-                    )
+                    
+                    if (configUpdate.updatedKeys.contains("enable_button")) {
+                        onCallBack(firebaseRemoteConfig.getBoolean("enable_button"))
+                        Log.e(
+                            "asasassasasasasasasassasa",
+                            "syncConfigurationsUpdates" + firebaseRemoteConfig.getBoolean("enable_button")
+                        )
+                    }
+                    
+
 
                 }
             }
@@ -99,10 +99,6 @@ class RemoteConfigRepoImpl(
         firebaseRemoteConfig.reset()
             .addOnSuccessListener { }
             .addOnFailureListener { it.printStackTrace() }
-    }
-
-    interface OnEventListener {
-        fun onEvent(er: Boolean?) // or void onEvent(); as per your need
     }
 
 }

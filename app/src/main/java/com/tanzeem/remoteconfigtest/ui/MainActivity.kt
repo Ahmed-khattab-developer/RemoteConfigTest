@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        viewModel.remoteConfigRepo.initConfigs()
         viewModel.enableBuyerCreateContractLiveData.observe(this) { updateConfigs(it) }
     }
 

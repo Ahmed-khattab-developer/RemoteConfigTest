@@ -8,19 +8,16 @@ import com.tanzeem.remoteconfigtest.util.SingleLiveEvent
 
 
 class ConfigViewModel(
-    private val remoteConfigRepo: RemoteConfigRepo = RemoteConfigRepoImpl()
-) : ViewModel(), RemoteConfigRepoImpl.OnEventListener {
 
+) : ViewModel() {
+
+    val remoteConfigRepo: RemoteConfigRepo = RemoteConfigRepoImpl(::onEvent)
     val enableBuyerCreateContractLiveData by lazy { SingleLiveEvent<Boolean>() }
 
-    init {
-        (remoteConfigRepo as RemoteConfigRepoImpl).setOnEventListener(this)
-    }
 
-
-    override fun onEvent(er: Boolean?) {
-        enableBuyerCreateContractLiveData.value = er
-        Log.e("asasassasasasasasasassasa", "ConfigViewModel" + er)
+     private fun onEvent(ss: Boolean?) {
+        enableBuyerCreateContractLiveData.value = ss
+        Log.e("asasassasasasasasasassasa", "ConfigViewModel" + ss)
     }
 
 
