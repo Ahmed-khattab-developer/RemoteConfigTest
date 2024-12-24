@@ -244,18 +244,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        viewModel.remoteConfigRepo.initConfigs()
-//        viewModel.enableBuyerCreateContractLiveData.observe(this) { updateConfigs(it) }
+
     }
 
-//    private fun updateConfigs(boolean: Boolean) {
-//
-//        findViewById<Button>(R.id.hide_btn).isVisible = boolean
-//        Toast.makeText(
-//            this, "button visibility is $boolean", Toast.LENGTH_SHORT
-//        ).show()
-//
-//    }
+
 
 
 }
