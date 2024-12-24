@@ -5,6 +5,12 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+
+
+    <color name="green">#88DA9C</color> <!-- Green color for completed steps -->
+    <color name="black">#1E1C1C</color> <!-- Black for the current step -->
+    <color name="white">#FFFFFF</color> <!-- White for future steps -->
+    <color name="gray">#D3D3D3</color> <!-- Gray for the lines -->
+    <color name="escalation">#EA705D</color> <!-- Gray for the lines -->
 </resources>

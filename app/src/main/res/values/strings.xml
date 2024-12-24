@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">RemoteConfigTest</string>
+
+    <string-array name="titles">
+        <item>ACCOUNT\n123</item>
+        <item>BAND</item>
+        <item>MEMBERSHIP</item>
+        <item>DASHBOARD</item>
+        <item>5</item>
+    </string-array>
 </resources>
