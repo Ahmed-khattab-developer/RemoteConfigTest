@@ -60,10 +60,8 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
         val step = steps[position]
         holder.stepNumber.text = step.number.toString()
         holder.stepText.text = step.title
-
         when {
             position < getCurrentStep() -> {
-                // Past step: Green background
                 if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && position == 1) {
                     holder.stepNumber.background = ContextCompat.getDrawable(
                         holder.itemView.context,
@@ -76,8 +74,7 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
                     holder.stepText.text = "التنفيذ \n تم التحكيم"
                 } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_REJECT_ITEM) == true && getClosedResolvedEscalationDelivery() && position == 2) {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
+                        holder.itemView.context, R.drawable.circle_background_escalation
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
@@ -86,8 +83,7 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
                     holder.stepText.text = "الفحص \n تم التحكيم"
                 } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && getClosedResolvedEscalationDelivery() && position == 2) {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
+                        holder.itemView.context, R.drawable.circle_background_escalation
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
@@ -96,36 +92,21 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
                     holder.stepNumber.text = "-"
                     holder.stepText.paintFlags =
                         holder.stepText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_REJECT_ITEM) == true && getClosedResolvedEscalationDelivery() && position == 2) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepText.text = "الفحص\n تم التحكيم"
                 } else {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_green
+                        holder.itemView.context, R.drawable.circle_background_green
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
                         ContextCompat.getColor(holder.itemView.context, R.color.green)
                     )
                 }
-
             }
 
             position == getCurrentStep() -> {
-                // Current step: Black background
-
                 if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && position == 1) {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
+                        holder.itemView.context, R.drawable.circle_background_escalation
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
@@ -134,8 +115,7 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
                     holder.stepText.text = "التنفيذ \n جاري التحكيم"
                 } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_REJECT_ITEM) == true && position == 2) {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
+                        holder.itemView.context, R.drawable.circle_background_escalation
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
@@ -144,8 +124,7 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
                     holder.stepText.text = "الفحص \n جاري التحكيم"
                 } else {
                     holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_black
+                        holder.itemView.context, R.drawable.circle_background_black
                     )
                     holder.stepNumber.setTextColor(Color.WHITE)
                     holder.stepText.setTextColor(
@@ -155,10 +134,8 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
             }
 
             else -> {
-                // Upcoming step: Gray background
                 holder.stepNumber.background = ContextCompat.getDrawable(
-                    holder.itemView.context,
-                    R.drawable.circle_background_grey
+                    holder.itemView.context, R.drawable.circle_background_grey
                 )
                 holder.stepNumber.setTextColor(Color.BLACK)
                 holder.stepText.setTextColor(
@@ -167,7 +144,6 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
             }
         }
 
-        // Show line for all but the last step
         holder.stepLine1.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
         holder.stepLine2.visibility =
             if (position == 3) View.INVISIBLE else View.VISIBLE
@@ -179,6 +155,7 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
         this.status = status
         notifyDataSetChanged()
     }
+
 }
 
 data class Step(val number: Int, val title: String)
