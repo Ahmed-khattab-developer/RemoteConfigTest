@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">RemoteConfigTest</string>
+    <string name="execution_arbitrated">التنفيذ \n تم التحكيم</string>
+    <string name="inspection_arbitrated">الفحص \n تم التحكيم</string>
+    <string name="execution_arbitration">التنفيذ \n جاري التحكيم</string>
+    <string name="inspection_arbitration">الفحص \n جاري التحكيم</string>
+    <string name="payment">الدفع</string>
+    <string name="execution">التنفيذ</string>
+    <string name="inspection">الفحص</string>
+    <string name="ending">إنهاء المعاملة</string>
 
     <string-array name="titles">
         <item>ACCOUNT\n123</item>

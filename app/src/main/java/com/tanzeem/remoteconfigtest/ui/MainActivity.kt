@@ -7,244 +7,199 @@ import com.tanzeem.remoteconfigtest.R
 
 class MainActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val customAdapterView = findViewById<AdapterView>(R.id.customAdapterView)
 
-        val customAdapterView = findViewById<CustomAdapterView>(R.id.customAdapterView)
+        customAdapterView.setupAdapter(context = this, contractStatus = ContractStatus.CREATED)
 
-        // Setup the adapter with item layout and binding logic
-        customAdapterView.setupAdapter(Status(ContractStatus.CREATED))
-
-
-        val customerDenyDelivery = ArrayList<EscalationTypeEnum>()
-        customerDenyDelivery.add(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY)
-
-        val customerRejectItem = ArrayList<EscalationTypeEnum>()
-        customerRejectItem.add(EscalationTypeEnum.CUSTOMER_REJECT_ITEM)
-
-        val customerDenyDeliveryAndRejectItem = ArrayList<EscalationTypeEnum>()
-        customerDenyDeliveryAndRejectItem.add(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY)
-        customerDenyDeliveryAndRejectItem.add(EscalationTypeEnum.CUSTOMER_REJECT_ITEM)
-
-        findViewById<RadioGroup>(R.id.radioGroup1).setOnCheckedChangeListener { group, checkedId ->
+        findViewById<RadioGroup>(R.id.radioGroup1).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioButton1 -> {
-                    customAdapterView.updateState(Status(ContractStatus.CREATED))
+                    customAdapterView.updateState(contractStatus = ContractStatus.CREATED)
                 }
 
                 R.id.radioButton2 -> {
-                    customAdapterView.updateState(Status(ContractStatus.WAITING_FOR_DELIVERY))
+                    customAdapterView.updateState(contractStatus = ContractStatus.WAITING_FOR_DELIVERY)
                 }
 
                 R.id.radioButton3 -> {
-                    customAdapterView.updateState(Status(ContractStatus.ITEM_INSPECTION))
+                    customAdapterView.updateState(contractStatus = ContractStatus.ITEM_INSPECTION)
                 }
 
                 R.id.radioButton4 -> {
-                    customAdapterView.updateState(Status(ContractStatus.ITEM_ACCEPTED))
+                    customAdapterView.updateState(contractStatus = ContractStatus.ITEM_ACCEPTED)
                 }
 
                 R.id.radioButton5 -> {
-                    customAdapterView.updateState(Status(ContractStatus.COMPLETED))
+                    customAdapterView.updateState(contractStatus = ContractStatus.COMPLETED)
                 }
             }
         }
 
-        findViewById<RadioGroup>(R.id.radioGroup2).setOnCheckedChangeListener { group, checkedId ->
+        findViewById<RadioGroup>(R.id.radioGroup2).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioButton6 -> {
-                    customAdapterView.updateState(Status(ContractStatus.SUBMITTED))
+                    customAdapterView.updateState(contractStatus = ContractStatus.SUBMITTED)
                 }
 
                 R.id.radioButton7 -> {
-                    customAdapterView.updateState(Status(ContractStatus.WAITING_FOR_DELIVERY))
+                    customAdapterView.updateState(contractStatus = ContractStatus.WAITING_FOR_DELIVERY)
                 }
 
                 R.id.radioButton8 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.DELIVERY_ESCALATION,customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.DELIVERY_ESCALATION,
+                        escalationDelivery = EscalationTypeEnum.CUSTOMER_DENY_DELIVERY
                     )
                 }
 
                 R.id.radioButton9 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.ITEM_INSPECTION,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.ITEM_INSPECTION,
+                        escalationDelivery = EscalationTypeEnum.CUSTOMER_DENY_DELIVERY
                     )
                 }
 
                 R.id.radioButton10 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.ITEM_ACCEPTED,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.ITEM_ACCEPTED,
+                        escalationDelivery = EscalationTypeEnum.CUSTOMER_DENY_DELIVERY
                     )
                 }
 
                 R.id.radioButton11 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.COMPLETED,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.COMPLETED,
+                        escalationDelivery = EscalationTypeEnum.CUSTOMER_DENY_DELIVERY
                     )
                 }
             }
         }
 
-        findViewById<RadioGroup>(R.id.radioGroup3).setOnCheckedChangeListener { group, checkedId ->
+        findViewById<RadioGroup>(R.id.radioGroup3).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioButton12 -> {
-                    customAdapterView.updateState(Status(ContractStatus.PENDING_PAYMENT_VERIFICATION))
+                    customAdapterView.updateState(contractStatus = ContractStatus.PENDING_PAYMENT_VERIFICATION)
                 }
 
                 R.id.radioButton13 -> {
-                    customAdapterView.updateState(Status(ContractStatus.WAITING_FOR_DELIVERY))
+                    customAdapterView.updateState(contractStatus = ContractStatus.WAITING_FOR_DELIVERY)
                 }
 
                 R.id.radioButton14 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.DELIVERY_ESCALATION,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.DELIVERY_ESCALATION,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY
+
                     )
                 }
 
                 R.id.radioButton15 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.RESOLVED_RELEASE_PROVIDER,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.RESOLVED_RELEASE_PROVIDER,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY
                     )
                 }
 
                 R.id.radioButton16 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.CLOSED_RELEASE_PROVIDER,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.CLOSED_RELEASE_PROVIDER,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY
                     )
                 }
             }
         }
 
-        findViewById<RadioGroup>(R.id.radioGroup4).setOnCheckedChangeListener { group, checkedId ->
+        findViewById<RadioGroup>(R.id.radioGroup4).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioButton17 -> {
-                    customAdapterView.updateState(Status(ContractStatus.PENDING_PAYMENT_VERIFICATION))
+                    customAdapterView.updateState(contractStatus = ContractStatus.PENDING_PAYMENT_VERIFICATION)
                 }
 
                 R.id.radioButton18 -> {
-                    customAdapterView.updateState(Status(ContractStatus.WAITING_FOR_DELIVERY))
+                    customAdapterView.updateState(contractStatus = ContractStatus.WAITING_FOR_DELIVERY)
                 }
 
                 R.id.radioButton19 -> {
-                    customAdapterView.updateState(Status(ContractStatus.INSPECTION_ESCALATION))
+                    customAdapterView.updateState(contractStatus = ContractStatus.ITEM_INSPECTION)
                 }
 
                 R.id.radioButton20 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.INSPECTION_ESCALATION,
-                            customerRejectItem
-                        )
+                        contractStatus = ContractStatus.INSPECTION_ESCALATION,
+                        escalationItem = EscalationTypeEnum.CUSTOMER_REJECT_ITEM
                     )
                 }
 
                 R.id.radioButton21 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.RESOLVED_REFUND_CUSTOMER,
-                            customerRejectItem
-                        )
+                        contractStatus = ContractStatus.RESOLVED_REFUND_CUSTOMER,
+                        escalationItem = EscalationTypeEnum.CUSTOMER_REJECT_ITEM
                     )
                 }
 
                 R.id.radioButton22 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.CLOSED_REFUND_CUSTOMER,
-                            customerRejectItem
-                        )
+                        contractStatus = ContractStatus.CLOSED_REFUND_CUSTOMER,
+                        escalationItem = EscalationTypeEnum.CUSTOMER_REJECT_ITEM
                     )
                 }
             }
         }
 
-        findViewById<RadioGroup>(R.id.radioGroup5).setOnCheckedChangeListener { group, checkedId ->
+        findViewById<RadioGroup>(R.id.radioGroup5).setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioButton23 -> {
-                    customAdapterView.updateState(Status(ContractStatus.CREATED))
+                    customAdapterView.updateState(contractStatus = ContractStatus.CREATED)
                 }
 
                 R.id.radioButton24 -> {
-                    customAdapterView.updateState(Status(ContractStatus.WAITING_FOR_DELIVERY))
+                    customAdapterView.updateState(contractStatus = ContractStatus.WAITING_FOR_DELIVERY)
                 }
 
                 R.id.radioButton25 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.DELIVERY_ESCALATION,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.DELIVERY_ESCALATION,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY
                     )
                 }
 
                 R.id.radioButton26 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.ITEM_INSPECTION,
-                            customerDenyDelivery
-                        )
+                        contractStatus = ContractStatus.ITEM_INSPECTION,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY
                     )
                 }
 
                 R.id.radioButton27 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.INSPECTION_ESCALATION,
-                            customerDenyDeliveryAndRejectItem
-                        )
+                        contractStatus = ContractStatus.INSPECTION_ESCALATION,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY,
+                        escalationItem = EscalationTypeEnum.PROVIDER_ESCALATE_ITEM
                     )
                 }
 
                 R.id.radioButton28 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.RESOLVED_RELEASE_PROVIDER,
-                            customerDenyDeliveryAndRejectItem
-                        )
+                        contractStatus = ContractStatus.RESOLVED_RELEASE_PROVIDER,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY,
+                        escalationItem = EscalationTypeEnum.PROVIDER_ESCALATE_ITEM
                     )
                 }
 
                 R.id.radioButton29 -> {
                     customAdapterView.updateState(
-                        Status(
-                            ContractStatus.CLOSED_RELEASE_PROVIDER,
-                            customerDenyDeliveryAndRejectItem
-                        )
+                        contractStatus = ContractStatus.CLOSED_RELEASE_PROVIDER,
+                        escalationDelivery = EscalationTypeEnum.PROVIDER_ESCALATE_DELIVERY,
+                        escalationItem = EscalationTypeEnum.PROVIDER_ESCALATE_ITEM
                     )
                 }
             }
         }
-
-
     }
-
-
-
-
 }
 
 enum class ContractStatus {

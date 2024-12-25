@@ -1,6 +1,6 @@
 package com.tanzeem.remoteconfigtest.ui
 
-import android.graphics.Color
+import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.tanzeem.remoteconfigtest.R
 
-class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter.StepViewHolder>() {
+class StepAdapter(
+    private val context: Context,
+    private var contractStatus: ContractStatus,
+    private var escalationDelivery: EscalationTypeEnum? = null,
+    private var escalationItem: EscalationTypeEnum? = null
+) : RecyclerView.Adapter<StepAdapter.StepViewHolder>() {
 
     class StepViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val stepNumber: TextView = view.findViewById(R.id.step_number)
@@ -19,155 +24,118 @@ class StepAdapter(private var status: Status) : RecyclerView.Adapter<StepAdapter
         val stepLine2: View = view.findViewById(R.id.step_line2)
     }
 
-    private fun getCurrentStep(): Int {
-        when (status.contractStatus) {
-            ContractStatus.CREATED, ContractStatus.SUBMITTED, ContractStatus.PENDING_PAYMENT_VERIFICATION -> {
-                return 0
-            }
-
-            ContractStatus.WAITING_FOR_DELIVERY, ContractStatus.DELIVERY_ESCALATION -> {
-                return 1
-            }
-
-            ContractStatus.ITEM_INSPECTION, ContractStatus.INSPECTION_ESCALATION -> {
-                return 2
-            }
-
-            ContractStatus.ITEM_ACCEPTED, ContractStatus.RESOLVED_RELEASE_PROVIDER, ContractStatus.RESOLVED_REFUND_CUSTOMER -> {
-                return 3
-            }
-
-            ContractStatus.COMPLETED, ContractStatus.CLOSED_RELEASE_PROVIDER, ContractStatus.CLOSED_REFUND_CUSTOMER -> {
-                return 4
-            }
-
-            else -> return 0
-        }
-    }
-
-    private fun getClosedResolvedEscalationDelivery(): Boolean {
-        return (status.contractStatus == ContractStatus.RESOLVED_RELEASE_PROVIDER || status.contractStatus == ContractStatus.RESOLVED_REFUND_CUSTOMER ||
-                status.contractStatus == ContractStatus.CLOSED_RELEASE_PROVIDER || status.contractStatus == ContractStatus.CLOSED_REFUND_CUSTOMER)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StepViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.step_item, parent, false)
         return StepViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: StepViewHolder, position: Int) {
-
         val step = steps[position]
         holder.stepNumber.text = step.number.toString()
         holder.stepText.text = step.title
         when {
-            position < getCurrentStep() -> {
-                if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && position == 1) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context,
-                        R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepText.text = "التنفيذ \n تم التحكيم"
-                } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_REJECT_ITEM) == true && getClosedResolvedEscalationDelivery() && position == 2) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepText.text = "الفحص \n تم التحكيم"
-                } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && getClosedResolvedEscalationDelivery() && position == 2) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepNumber.text = "-"
-                    holder.stepText.paintFlags =
-                        holder.stepText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                } else {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_green
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.green)
-                    )
+            position < AdapterHelper.getCurrentStep(contractStatus) -> {
+                when {
+                    position == 1 && AdapterHelper.isEscalationDelivery(escalationDelivery) -> {
+                        drawEscalationItem(holder)
+                        holder.stepText.text = context.getString(R.string.execution_arbitrated)
+                    }
+
+                    position == 2 && AdapterHelper.isEscalationItem(escalationItem)
+                            && AdapterHelper.isClosedResolvedEscalation(contractStatus) -> {
+                        drawEscalationItem(holder)
+                        holder.stepText.text = context.getString(R.string.inspection_arbitrated)
+                    }
+
+                    position == 2 && AdapterHelper.isEscalationDelivery(escalationDelivery)
+                            && AdapterHelper.isClosedResolvedEscalation(contractStatus) -> {
+                        drawEscalationItem(holder)
+                        holder.stepNumber.text = "-"
+                        holder.stepText.paintFlags =
+                            holder.stepText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                    }
+
+                    else -> {
+                        drawPreviousItem(holder)
+                    }
                 }
             }
 
-            position == getCurrentStep() -> {
-                if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_DENY_DELIVERY) == true && position == 1) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepText.text = "التنفيذ \n جاري التحكيم"
-                } else if (status.escalationTypeEnum?.contains(EscalationTypeEnum.CUSTOMER_REJECT_ITEM) == true && position == 2) {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_escalation
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
-                    holder.stepText.text = "الفحص \n جاري التحكيم"
-                } else {
-                    holder.stepNumber.background = ContextCompat.getDrawable(
-                        holder.itemView.context, R.drawable.circle_background_black
-                    )
-                    holder.stepNumber.setTextColor(Color.WHITE)
-                    holder.stepText.setTextColor(
-                        ContextCompat.getColor(holder.itemView.context, R.color.black)
-                    )
+            position == AdapterHelper.getCurrentStep(contractStatus) -> {
+                when {
+                    position == 1 && AdapterHelper.isEscalationDelivery(escalationDelivery) -> {
+                        drawEscalationItem(holder)
+                        holder.stepText.text = context.getString(R.string.execution_arbitration)
+                    }
+
+                    position == 2 && AdapterHelper.isEscalationItem(escalationItem) -> {
+                        drawEscalationItem(holder)
+                        holder.stepText.text = context.getString(R.string.inspection_arbitration)
+                    }
+
+                    else -> {
+                        drawCurrentItem(holder)
+                    }
                 }
             }
 
             else -> {
-                holder.stepNumber.background = ContextCompat.getDrawable(
-                    holder.itemView.context, R.drawable.circle_background_grey
-                )
-                holder.stepNumber.setTextColor(Color.BLACK)
-                holder.stepText.setTextColor(
-                    ContextCompat.getColor(holder.itemView.context, R.color.gray)
-                )
+                drawUpcomingItem(holder)
             }
         }
 
         holder.stepLine1.visibility = if (position == 0) View.INVISIBLE else View.VISIBLE
-        holder.stepLine2.visibility =
-            if (position == 3) View.INVISIBLE else View.VISIBLE
+        holder.stepLine2.visibility = if (position == 3) View.INVISIBLE else View.VISIBLE
     }
 
-    override fun getItemCount(): Int = 4
+    override fun getItemCount(): Int = steps.size
 
-    fun updateState(status: Status) {
-        this.status = status
+    fun updateState(
+        contractStatus: ContractStatus,
+        escalationDelivery: EscalationTypeEnum? = null,
+        escalationItem: EscalationTypeEnum? = null
+    ) {
+        this.contractStatus = contractStatus
+        this.escalationDelivery = escalationDelivery
+        this.escalationItem = escalationItem
         notifyDataSetChanged()
     }
 
+    private fun drawPreviousItem(holder: StepViewHolder) {
+        holder.stepNumber.background =
+            ContextCompat.getDrawable(context, R.drawable.circle_background_green)
+        holder.stepNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
+        holder.stepText.setTextColor(ContextCompat.getColor(context, R.color.green))
+    }
+
+    private fun drawCurrentItem(holder: StepViewHolder) {
+        holder.stepNumber.background =
+            ContextCompat.getDrawable(context, R.drawable.circle_background_black)
+        holder.stepNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
+        holder.stepText.setTextColor(ContextCompat.getColor(context, R.color.black))
+    }
+
+    private fun drawUpcomingItem(holder: StepViewHolder) {
+        holder.stepNumber.background =
+            ContextCompat.getDrawable(context, R.drawable.circle_background_grey)
+        holder.stepNumber.setTextColor(ContextCompat.getColor(context, R.color.black))
+        holder.stepText.setTextColor(ContextCompat.getColor(context, R.color.gray))
+    }
+
+    private fun drawEscalationItem(holder: StepViewHolder) {
+        holder.stepNumber.background =
+            ContextCompat.getDrawable(context, R.drawable.circle_background_escalation)
+        holder.stepNumber.setTextColor(ContextCompat.getColor(context, R.color.white))
+        holder.stepText.setTextColor(ContextCompat.getColor(context, R.color.black))
+    }
+
+    private val steps = listOf(
+        Step(1, context.getString(R.string.payment)),
+        Step(2, context.getString(R.string.execution)),
+        Step(3, context.getString(R.string.inspection)),
+        Step(4, context.getString(R.string.ending))
+    )
+
+    data class Step(val number: Int, val title: String)
 }
 
-data class Step(val number: Int, val title: String)
-
-data class Status(
-    var contractStatus: ContractStatus,
-    var escalationTypeEnum: ArrayList<EscalationTypeEnum>? = null
-)
-
-val steps = listOf(
-    Step(1, "الدفع"),
-    Step(2, "التنفيذ"),
-    Step(3, "الفحص"),
-    Step(4, "إنهاء المعاملة")
-)
